@@ -11,6 +11,22 @@ It implements a pid controller for a made up `geometry_msgs/Twist` cmd_vel. Ther
 nothing to actually control for real, but you can play with the parts and find a
 working pid implementation with dynamic reconfigure to tune it available.
 
+You should be able to build this package with something like:
+```bash
+mkdir -p pid_ws/src
+cd pid_ws/src
+git clone https://github.com/awesomebytes/control_toolbox_pid_tutorial
+cd ..
+catkin build
+source devel/setup.bash
+```
+
+You can run the example node with:
+
+```bash
+rosrun control_toolbox_pid_tutorial pid_example
+```
+
 # Dynamic reconfigure
 Looks like this:
 ![dynamic_reconfigure_capture](rqt_reconfigure.png)
@@ -51,3 +67,10 @@ In my case, to debug what is going on I use:
 * `rosrun plotjuggler PlotJuggler` [PlotJuggler](https://facontidavide.github.io/PlotJuggler) to visualize in real time the different inputs and outputs, including the PID state, in case that helps debugging (it may help to choose i_clamp values of the PID). [rqt_multiplot](http://wiki.ros.org/rqt_multiplot) could be used too (as rqt plugin probably).
 * Some `rostopic echo` of the topics that come in and out. They are useful sometimes too.
 * `rosbag record` and `rosbag play` to check in an offline fashion.
+
+# Stuff you may need installed
+```bash
+sudo apt-get install ros-kinetic-control-toolbox ros-kinetic-rqt-reconfigure ros-kinetic-plotjuggler ros-kinetic-rqt-robot-steering
+```
+
+But chances are you already have them.
