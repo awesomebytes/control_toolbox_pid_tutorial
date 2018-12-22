@@ -41,6 +41,7 @@ class ThingController
 public:
   ThingController(ros::NodeHandle nh_)
   {
+    nhp_ = ros::NodeHandle("~");
     // The dynamic reconfigure server is only instanced
     // if the param server contains at least the 'p' gain
     // in this case, /my_namespace/my_pid/p
@@ -51,23 +52,23 @@ public:
     // You could choose to initialize your values
     // in some other way, but if you want to have access to the
     // dynamic reconfigure you must set the 'p' parameter
-    if (!nh_.hasParam("my_pid/p"))
-        nh_.setParam("my_pid/p", 100.0);
-    if (!nh_.hasParam("my_pid/i"))
-        nh_.setParam("my_pid/i", 10.0);
-    if (!nh_.hasParam("my_pid/d"))
-        nh_.setParam("my_pid/d", 0.0);
-    if (!nh_.hasParam("my_pid/i_clamp_min"))
-        nh_.setParam("my_pid/i_clamp_min", -10.0);
-    if (!nh_.hasParam("my_pid/i_clamp_max"))
-        nh_.setParam("my_pid/i_clamp_max", 10.0);
+    if (!nhp_.hasParam("my_pid/p"))
+        nhp_.setParam("my_pid/p", 100.0);
+    if (!nhp_.hasParam("my_pid/i"))
+        nhp_.setParam("my_pid/i", 10.0);
+    if (!nhp_.hasParam("my_pid/d"))
+        nhp_.setParam("my_pid/d", 0.0);
+    if (!nhp_.hasParam("my_pid/i_clamp_min"))
+        nhp_.setParam("my_pid/i_clamp_min", -10.0);
+    if (!nhp_.hasParam("my_pid/i_clamp_max"))
+        nhp_.setParam("my_pid/i_clamp_max", 10.0);
     // If the param server contains 'publish_state' to true
     // a topic publishing the state of the PID will be available
     // in this case /my_namespace/my_pid/state of type control_msgs/PidState.msg
     // Here I'm forcing it to true to show it
-    nh_.setParam("my_pid/publish_state", true);
+    nhp_.setParam("publish_state", true);
     // With this init call the p, i, d & i_clamp variables are taken from the param server
-    my_pid_.init(ros::NodeHandle(nh_, "my_pid"), false);
+    my_pid_.init(ros::NodeHandle(nhp_, "my_pid"), false);
     // Check the docs for other init possibilities:
     // http://docs.ros.org/api/control_toolbox/html/classcontrol__toolbox_1_1Pid.html
     // it can be initialized without dynamic reconfigure, or with initial values
@@ -75,7 +76,7 @@ public:
 
     // Demo stuff
     vel_sub_ = nh_.subscribe("cmd_vel", 10, &ThingController::command_cb, this);
-    vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel_out", 10);
+    vel_pub_ = nhp_.advertise<geometry_msgs::Twist>("cmd_vel_out", 10);
     x_to_control_ = 0.0;
     ROS_INFO_STREAM("Node ready");
   }
@@ -122,6 +123,7 @@ void command_system(double command){
 }
 
 private:
+  ros::NodeHandle nhp_;
   control_toolbox::Pid my_pid_;
   ros::Subscriber vel_sub_;
   ros::Publisher vel_pub_;
@@ -135,7 +137,7 @@ private:
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "pid_example");
-  ros::NodeHandle nh_("my_namespace");
+  ros::NodeHandle nh_;
 
   ThingController thing_controller = ThingController(nh_);
   thing_controller.do_stuff();

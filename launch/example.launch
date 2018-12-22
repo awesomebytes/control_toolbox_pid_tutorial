@@ -1,0 +1,13 @@
+<launch>
+    <node name="pid_example"
+          pkg="control_toolbox_pid_tutorial"
+          type="pid_example">
+        <param name="my_pid/p" value="100.0"/>
+        <param name="my_pid/i" value="1.0"/>
+        <param name="my_pid/d" value="0.0"/>
+        <param name="my_pid/i_clamp_min" value="-10.0"/>
+        <param name="my_pid/i_clamp_max" value="10.0"/>
+        <param name="my_pid/publish_state" value="true"/>
+    </node>
+
+</launch>

@@ -27,6 +27,11 @@ You can run the example node with:
 rosrun control_toolbox_pid_tutorial pid_example
 ```
 
+Or check it out with a launchfile setting up the PID parameters:
+```bash
+roslaunch control_toolbox_pid_tutorial example.launch
+```
+
 # Dynamic reconfigure
 Looks like this:
 ![dynamic_reconfigure_capture](rqt_reconfigure.png)
